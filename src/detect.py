@@ -2,12 +2,11 @@
 
 from pathlib import Path
 import matplotlib.pyplot as plt
-# import numpy as np
+import numpy as np
 from matplotlib.patches import Rectangle
 
-
 from scipy import ndimage
-import cv2
+from PIL import Image
 
 class Config:
     main_input_dir = Path(r'')
@@ -18,7 +17,7 @@ class Config:
     output_dir = Path('../output')
 
     params = {
-        'thr': 6,
+        'thr': 6*256,
         'size_thr': 5
         }
 
@@ -58,12 +57,12 @@ def get_sizes(labels):
 
 #%%
 
-for file_alpha in files_alpha[:50]:
-    img = cv2.imread(str(file_alpha), cv2.IMREAD_GRAYSCALE)
+for file_alpha in files_alpha:
+    img = np.array(Image.open(file_alpha))
 
     img_cropped = img[:,:470]
     fig, ax = plt.subplots()
-    ax.imshow(img_cropped, vmin=0, vmax=50)
+    ax.imshow(img_cropped, vmin=0, vmax=50*256)
     # ax.colorbar()
 
     detections = detect_events(img_cropped, **Config.params)
