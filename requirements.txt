@@ -1,4 +1,9 @@
 matplotlib
 numpy
 scipy
+sklearn
 Pillow
+torch
+torchvision
+torchmetrics
+timm
