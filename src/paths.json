@@ -1,0 +1,4 @@
+{"data": {"train_path": "/scratch/data/train",
+ "val_path": "/scratch/data/val",
+ "test_path": "/scratch/data/test"},
+ "output":"/scratch/output/logs"}

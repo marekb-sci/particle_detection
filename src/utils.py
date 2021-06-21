@@ -5,7 +5,7 @@ from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-import sklearn
+# import sklearn
 
 import torch
 import torchvision
@@ -40,15 +40,13 @@ class ImageLoader:
         return tensor
 
 #%%
-def log_confusion_matrix(gt_labels, pred_labels, logger, class_names=None, num_classes=None,
+def log_confusion_matrix(cm, logger, class_names=None, num_classes=None,
                          image_label='confusion matrix', epoch=0):
-    if class_names is None and num_classes is None:
-        num_classes = len(set(gt_labels) | set(pred_labels))
+    assert class_names is not None or num_classes is not None
     if class_names is None:
         class_names = list(map(str, range(num_classes)))
-    if num_classes is None:
-        num_classes = len(class_names)
-    cm = sklearn.metrics.confusion_matrix(gt_labels, pred_labels, labels= np.arange(num_classes), normalize='true')
+    num_classes = len(class_names)
+    # cm = sklearn.metrics.confusion_matrix(gt_labels, pred_labels, labels= np.arange(num_classes), normalize='true')
     cm_figure = plot_confusion_matrix(cm, class_names)
     log_figure(logger, cm_figure, image_label=image_label, epoch=epoch)
     plt.close(cm_figure)
@@ -95,3 +93,4 @@ def log_figure(logger, fig, image_label='', epoch=0):
 
     img = torchvision.transforms.functional.to_tensor(pil_img)
     logger.add_image(image_label, img, epoch)
+
