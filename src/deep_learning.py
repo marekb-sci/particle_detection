@@ -159,7 +159,7 @@ def train_one_epoch(model, data_loader, criterion, optimizer, train_config, tb_l
             metrics['accuracy'].reset()
             metrics['confusion matrix'].reset()
 
-    return state, metrics
+    return state
 
 @torch.no_grad()
 def validate(model, data_loader, criterion, train_config, tb_logger, metrics, state):
@@ -255,7 +255,7 @@ def run_training(config):
     state = {'training_steps': 0, 'epoch': None, 'last_log': -float('inf')}
     for i_epoch in range(config['training']['num_epochs']):
         state['epoch'] = i_epoch
-        state, train_metrics = train_one_epoch(model, dl_train, criterion, optimizer, config['training'], tb_logger, metrics, state)
+        state = train_one_epoch(model, dl_train, criterion, optimizer, config['training'], tb_logger, metrics, state)
         val_metrics = validate(model, dl_val, criterion, config['training'], tb_logger, metrics, state)
 
         checkpoint_saver.save_if_best(model, val_metrics['accuracy'])
@@ -263,8 +263,7 @@ def run_training(config):
         # torch.save(model, output_dir / weights_file)
     test_metrics = validate(model, dl_test, criterion, config['training'], tb_logger, metrics, state)
     metrics_out = {'val_accuracy': val_metrics['accuracy'], 'val_loss': val_metrics['loss'],
-                           'test_accuracy': test_metrics['accuracy'], 'test_loss': test_metrics['loss'],
-                           'train_accuracy': train_metrics['accuracy'], 'train_loss': train_metrics['loss']
+                           'test_accuracy': test_metrics['accuracy'], 'test_loss': test_metrics['loss']
                            }
     tb_logger.add_hparams(get_hparams(config), metrics_out)
     tb_logger.close()
